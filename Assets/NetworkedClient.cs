@@ -26,7 +26,6 @@ public class NetworkedClient : MonoBehaviour
     GameObject gameSystemManager;
     string username;
 
-    // Start is called before the first frame update
     void Start()
     {
         GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -51,11 +50,8 @@ public class NetworkedClient : MonoBehaviour
         Connect();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.S))
-        //    SendMessageToHost("Hello from client");
         UpdateNetworkConnection();
     }
 

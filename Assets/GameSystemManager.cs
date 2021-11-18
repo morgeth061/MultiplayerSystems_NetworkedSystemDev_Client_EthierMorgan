@@ -29,18 +29,6 @@ public class GameSystemManager : MonoBehaviour
     bool gameRunning = false;
     GameObject networkedClient;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void PlayerJoined()
     {
         GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
