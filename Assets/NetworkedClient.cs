@@ -153,10 +153,14 @@ public class NetworkedClient : MonoBehaviour
             
             if(gameSignifier == ServerToClientGameSignifiers.GameInitialize)
             {
-
+                gameSystemManager.GetComponent<GameSystemManager>().InitializeGame(csv[2]);
                 gameInitialized = true;
             }
             else if(gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
+            {
+                gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
+            }
+            else if(gameSignifier == ServerToClientGameSignifiers.RefreshUI)
             {
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
@@ -221,6 +225,8 @@ public static class ServerToClientGameSignifiers
     public const int Player1Won = 2;
 
     public const int Player2Won = 3;
+
+    public const int RefreshUI = 4;
 
     public const int GameInitialize = 9;
 

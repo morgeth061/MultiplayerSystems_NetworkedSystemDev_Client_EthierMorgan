@@ -15,6 +15,7 @@ public class GameSystemManager : MonoBehaviour
     GameObject BottomLeft;
     GameObject BottomMiddle;
     GameObject BottomRight;
+    GameObject OpponentName;
 
     bool gameRunning = false;
     GameObject networkedClient;
@@ -31,7 +32,7 @@ public class GameSystemManager : MonoBehaviour
         
     }
 
-    public void InitializeGame()
+    public void InitializeGame(string name)
     {
         GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
         foreach (GameObject go in sceneObjects)
@@ -72,6 +73,10 @@ public class GameSystemManager : MonoBehaviour
             {
                 BottomRight = go;
             }
+            else if(go.name == "OpponentName")
+            {
+                OpponentName = go;
+            }
             else if (go.name == "NetworkedClient")
             {
                 networkedClient = go;
@@ -89,6 +94,8 @@ public class GameSystemManager : MonoBehaviour
         BottomLeft.GetComponent<Button>().onClick.AddListener(BottomLeftClicked);
         BottomMiddle.GetComponent<Button>().onClick.AddListener(BottomMiddleClicked);
         BottomRight.GetComponent<Button>().onClick.AddListener(BottomRightClicked);
+
+        OpponentName.GetComponent<Text>().text = name;
     }
 
     public void RefreshUI(int tl, int tm, int tr, int ml, int m, int mr, int bl, int bm, int br)
