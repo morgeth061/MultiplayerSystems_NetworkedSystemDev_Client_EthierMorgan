@@ -23,6 +23,7 @@ public class NetworkedClient : MonoBehaviour
 
     //Game
     bool gameInitialized = false;
+    GameObject gameSystemManager;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,10 @@ public class NetworkedClient : MonoBehaviour
             else if (go.name == "GameCanvas")
             {
                 GameCanvas = go;
+            }
+            else if (go.name == "GameSystemManager")
+            {
+                gameSystemManager = go;
             }
         }
 
@@ -150,6 +155,10 @@ public class NetworkedClient : MonoBehaviour
             {
 
                 gameInitialized = true;
+            }
+            else if(gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
+            {
+                gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
 
         }

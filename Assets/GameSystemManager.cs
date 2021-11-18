@@ -127,7 +127,7 @@ public class GameSystemManager : MonoBehaviour
     //***************************
     private void TopLeftClicked()
     {
-        if(TopLeft.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if(TopLeft.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 1);
         }
@@ -135,56 +135,56 @@ public class GameSystemManager : MonoBehaviour
 
     private void TopMiddleClicked()
     {
-        if (TopMiddle.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (TopMiddle.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 2);
         }
     }
     private void TopRightClicked()
     {
-        if (TopRight.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (TopRight.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 3);
         }
     }
     private void MiddleLeftClicked()
     {
-        if (MiddleLeft.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (MiddleLeft.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 4);
         }
     }
     private void MiddleClicked()
     {
-        if (Middle.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (Middle.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 5);
         }
     }
     private void MiddleRightClicked()
     {
-        if (MiddleRight.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (MiddleRight.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 6);
         }
     }
     private void BottomLeftClicked()
     {
-        if (BottomLeft.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (BottomLeft.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 7);
         }
     }
     private void BottomMiddleClicked()
     {
-        if (BottomMiddle.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (BottomMiddle.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 8);
         }
     }
     private void BottomRightClicked()
     {
-        if (BottomRight.GetComponent<Button>().GetComponentFromChild<Text>().text == 0)
+        if (BottomRight.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
         {
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 9);
         }
