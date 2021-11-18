@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class NetworkedClient : MonoBehaviour
 {
-
     int connectionID;
     int maxConnections = 1000;
     int reliableChannelID;
@@ -17,17 +17,36 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
+    //UI
+    GameObject LoginCanvas;
+    GameObject GameCanvas;
+
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in sceneObjects)
+        {
+            if (go.name == "LoginCanvas")
+            {
+                LoginCanvas = go;
+            }
+            else if (go.name == "GameCanvas")
+            {
+                GameCanvas = go;
+            }
+        }
+
+        GameCanvas.SetActive(false);
+
         Connect();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-            SendMessageToHost("Hello from client");
+        //if (Input.GetKeyDown(KeyCode.S))
+            //SendMessageToHost("Hello from client");
 
         UpdateNetworkConnection();
     }
@@ -105,6 +124,23 @@ public class NetworkedClient : MonoBehaviour
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
+
+        string[] csv = msg.Split(',');
+
+        int stateSignifier = int.Parse(csv[0]);
+
+        if(stateSignifier == ServerToClientStateSignifiers.Account)
+        {
+            int accountSignifier = int.Parse(csv[1]);
+            //Switch from Login to Game view
+            if (accountSignifier == ServerToClientAccountSignifiers.LoginComplete)
+            {
+                GameCanvas.SetActive(true);
+                LoginCanvas.SetActive(false);
+            }
+        }
+
+        
     }
 
     public bool IsConnected()
@@ -113,4 +149,40 @@ public class NetworkedClient : MonoBehaviour
     }
 
 
+}
+
+public static class ClientToServerStateSignifiers
+{
+    public const int Account = 1;
+
+    public const int Game = 2;
+
+    public const int Spectate = 3;
+
+    public const int Other = 9;
+}
+
+public static class ClientToServerAccountSignifiers
+{
+    public const int CreateAccount = 1;
+
+    public const int Login = 2;
+}
+
+public static class ServerToClientStateSignifiers
+{
+    public const int Account = 1;
+
+    public const int Game = 2;
+}
+
+public static class ServerToClientAccountSignifiers
+{
+    public const int LoginComplete = 1;
+
+    public const int LoginFailed = 2;
+
+    public const int AccountCreationComplete = 3;
+
+    public const int AccountCreationFailed = 4;
 }

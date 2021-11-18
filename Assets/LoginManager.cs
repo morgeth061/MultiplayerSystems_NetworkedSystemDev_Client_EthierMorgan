@@ -43,12 +43,14 @@ public class LoginManager : MonoBehaviour
             {
                 submitButton = go;
             }
+            else if(go.name == "NetworkedClient")
+            {
+                networkedClient = go;
+            }
         }
 
         submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
         loginToggle.GetComponent<Button>().onClick.AddListener(ToggleButtonPressed);
-
-        //gameRoomField.GetComponent<Dropdown>().onValueChanged.AddListener(UpdateGameRoom);
 
         UpdateGameRoom();
 
@@ -57,11 +59,32 @@ public class LoginManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Can't update GameRoom value via OnValueChanged, so changing it here.
+        UpdateGameRoom();
     }
 
     public void SubmitButtonPressed()
     {
+        Debug.Log("Submit button pressed");
+
+        string user = usernameField.GetComponent<InputField>().text;
+        string pass = passwordField.GetComponent<InputField>().text;
+
+        string msg;
+
+        //Login is current toggle
+        if (isLogin)
+        {
+            msg = ClientToServerStateSignifiers.Account + "," + ClientToServerAccountSignifiers.Login + "," + user + "," + pass + "," + currentGameRoom;
+        }
+        //Login is not current toggle
+        else
+        {
+            msg = ClientToServerStateSignifiers.Account + "," + ClientToServerAccountSignifiers.CreateAccount + "," + user + "," + pass + "," + currentGameRoom;
+        }
+
+        //Send message to server
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
 
     }
 
@@ -83,6 +106,8 @@ public class LoginManager : MonoBehaviour
         isLogin = !isLogin;
     }
 
+    //Changes to GameRoom currently selected.
+    //If on Account Creation, GameRoom is -1, meaning account is being created instead.
     public void UpdateGameRoom()
     {
         if(isLogin)
@@ -106,3 +131,5 @@ public class LoginManager : MonoBehaviour
         }
     }
 }
+
+
