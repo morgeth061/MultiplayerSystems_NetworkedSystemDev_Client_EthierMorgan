@@ -21,6 +21,9 @@ public class NetworkedClient : MonoBehaviour
     GameObject LoginCanvas;
     GameObject GameCanvas;
 
+    //Game
+    bool gameInitialized = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +48,8 @@ public class NetworkedClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.S))
-            //SendMessageToHost("Hello from client");
+        if (Input.GetKeyDown(KeyCode.S))
+            SendMessageToHost("Hello from client");
 
         UpdateNetworkConnection();
     }
@@ -139,6 +142,17 @@ public class NetworkedClient : MonoBehaviour
                 LoginCanvas.SetActive(false);
             }
         }
+        else if(stateSignifier == ServerToClientStateSignifiers.Game)
+        {
+            int gameSignifier = int.Parse(csv[1]);
+            
+            if(gameSignifier == ServerToClientGameSignifiers.GameInitialize)
+            {
+
+                gameInitialized = true;
+            }
+
+        }
 
         
     }
@@ -168,6 +182,10 @@ public static class ClientToServerAccountSignifiers
 
     public const int Login = 2;
 }
+public static class ClientToServerGameSignifiers
+{
+    public const int ChoiceMade = 1;
+}
 
 public static class ServerToClientStateSignifiers
 {
@@ -185,4 +203,16 @@ public static class ServerToClientAccountSignifiers
     public const int AccountCreationComplete = 3;
 
     public const int AccountCreationFailed = 4;
+}
+
+public static class ServerToClientGameSignifiers
+{
+    public const int CurrentTurn = 1;
+
+    public const int Player1Won = 2;
+
+    public const int Player2Won = 3;
+
+    public const int GameInitialize = 9;
+
 }
