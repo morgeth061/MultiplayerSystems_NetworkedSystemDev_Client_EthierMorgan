@@ -76,6 +76,7 @@ public class LoginManager : MonoBehaviour
         if (isLogin)
         {
             msg = ClientToServerStateSignifiers.Account + "," + ClientToServerAccountSignifiers.Login + "," + user + "," + pass + "," + currentGameRoom;
+            networkedClient.GetComponent<NetworkedClient>().SetUsername(user);
         }
         //Login is not current toggle
         else

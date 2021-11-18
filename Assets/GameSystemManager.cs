@@ -18,6 +18,13 @@ public class GameSystemManager : MonoBehaviour
     GameObject OpponentName;
 
     GameObject RestartButton;
+    GameObject ChatboxTextNew;
+    GameObject ChatboxTextOld;
+
+    GameObject GoodGame;
+    GameObject HurryUp;
+    GameObject NiceMove;
+    GameObject Gotcha;
 
     bool gameRunning = false;
     GameObject networkedClient;
@@ -43,10 +50,45 @@ public class GameSystemManager : MonoBehaviour
             {
                 RestartButton = go;
             }
+            else if (go.name == "ChatboxText1")
+            {
+                ChatboxTextOld = go;
+            }
+            else if (go.name == "ChatboxText2")
+            {
+                ChatboxTextNew = go;
+            }
+            else if(go.name == "GoodGame")
+            {
+                GoodGame = go;
+            }
+            else if (go.name == "HurryUp")
+            {
+                HurryUp = go;
+            }
+            else if (go.name == "NiceMove")
+            {
+                NiceMove = go;
+            }
+            else if (go.name == "Gotcha")
+            {
+                Gotcha = go;
+            }
+            else if (go.name == "NetworkedClient")
+            {
+                networkedClient = go;
+            }
         }
 
         RestartButton.GetComponent<Button>().onClick.AddListener(RestartButtonClicked);
+        GoodGame.GetComponent<Button>().onClick.AddListener(GoodGameButtonClicked);
+        HurryUp.GetComponent<Button>().onClick.AddListener(HurryUpButtonClicked);
+        NiceMove.GetComponent<Button>().onClick.AddListener(NiceMoveButtonClicked);
+        Gotcha.GetComponent<Button>().onClick.AddListener(GotchaButtonClicked);
+
         RestartButton.SetActive(false);
+
+        UpdateTextBox("Player 1 Joined");
     }
 
     public void InitializeGame(string name)
@@ -94,10 +136,7 @@ public class GameSystemManager : MonoBehaviour
             {
                 OpponentName = go;
             }
-            else if (go.name == "NetworkedClient")
-            {
-                networkedClient = go;
-            }
+            
         }
 
         gameRunning = true;
@@ -113,6 +152,7 @@ public class GameSystemManager : MonoBehaviour
         BottomRight.GetComponent<Button>().onClick.AddListener(BottomRightClicked);
 
         OpponentName.GetComponent<Text>().text = name;
+        UpdateTextBox("Player 2 Joined");
     }
 
     public void RefreshUI(int tl, int tm, int tr, int ml, int m, int mr, int bl, int bm, int br)
@@ -141,6 +181,29 @@ public class GameSystemManager : MonoBehaviour
     private void RestartButtonClicked()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ResetGame);
+    }
+
+    private void GoodGameButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Message + "," + networkedClient.GetComponent<NetworkedClient>().GetUsername() + ": Good game!");
+    }
+    private void HurryUpButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Message + "," + networkedClient.GetComponent<NetworkedClient>().GetUsername() + ": Hurry up!");
+    }
+    private void NiceMoveButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Message + "," + networkedClient.GetComponent<NetworkedClient>().GetUsername() + ": Nice move!");
+    }
+    private void GotchaButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Message + "," + networkedClient.GetComponent<NetworkedClient>().GetUsername() + ": Gotcha!");
+    }
+
+    public void UpdateTextBox(string newText)
+    {
+        ChatboxTextOld.GetComponent<Text>().text = ChatboxTextNew.GetComponent<Text>().text;
+        ChatboxTextNew.GetComponent<Text>().text = newText;
     }
 
     private string ConvertButtonString(int val)

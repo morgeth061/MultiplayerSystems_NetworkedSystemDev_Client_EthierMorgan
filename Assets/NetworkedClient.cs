@@ -24,6 +24,7 @@ public class NetworkedClient : MonoBehaviour
     //Game
     bool gameInitialized = false;
     GameObject gameSystemManager;
+    string username;
 
     // Start is called before the first frame update
     void Start()
@@ -160,6 +161,7 @@ public class NetworkedClient : MonoBehaviour
             else if (gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
             {
                 Debug.Log("Your turn.");
+                gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("It is now your turn.");
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
             else if (gameSignifier == ServerToClientGameSignifiers.RefreshUI)
@@ -170,22 +172,36 @@ public class NetworkedClient : MonoBehaviour
             else if (gameSignifier == ServerToClientGameSignifiers.YouWon)
             {
                 Debug.Log("You won!");
+                gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("You won!");
                 gameSystemManager.GetComponent<GameSystemManager>().GameWon(true);
             }
             else if (gameSignifier == ServerToClientGameSignifiers.OpponentWon)
             {
                 Debug.Log("Opponent won!");
+                gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("You lost.");
                 gameSystemManager.GetComponent<GameSystemManager>().GameWon(false);
             }
+            else if (gameSignifier == ServerToClientGameSignifiers.Message)
+            {
+                gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox(csv[2]);
+            }
         }
+    }
+
+    public void SetUsername(string name)
+    {
+        username = name;
+    }
+
+    public string GetUsername()
+    {
+        return username;
     }
 
     public bool IsConnected()
     {
         return isConnected;
     }
-
-
 }
 
 public static class ClientToServerStateSignifiers
@@ -210,6 +226,8 @@ public static class ClientToServerGameSignifiers
     public const int ChoiceMade = 1;
 
     public const int ResetGame = 2;
+
+    public const int Message = 3;
 }
 
 public static class ServerToClientStateSignifiers
@@ -239,6 +257,8 @@ public static class ServerToClientGameSignifiers
     public const int OpponentWon = 3;
 
     public const int RefreshUI = 4;
+
+    public const int Message = 5;
 
     public const int GameInitialize = 9;
 
