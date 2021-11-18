@@ -53,9 +53,8 @@ public class NetworkedClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-            SendMessageToHost("Hello from client");
-
+        //if (Input.GetKeyDown(KeyCode.S))
+        //    SendMessageToHost("Hello from client");
         UpdateNetworkConnection();
     }
 
@@ -145,29 +144,40 @@ public class NetworkedClient : MonoBehaviour
             {
                 GameCanvas.SetActive(true);
                 LoginCanvas.SetActive(false);
+                gameSystemManager.GetComponent<GameSystemManager>().PlayerJoined();
             }
         }
         else if(stateSignifier == ServerToClientStateSignifiers.Game)
         {
             int gameSignifier = int.Parse(csv[1]);
-            
-            if(gameSignifier == ServerToClientGameSignifiers.GameInitialize)
+
+            if (gameSignifier == ServerToClientGameSignifiers.GameInitialize)
             {
+                Debug.Log("Game initializing.");
                 gameSystemManager.GetComponent<GameSystemManager>().InitializeGame(csv[2]);
                 gameInitialized = true;
             }
-            else if(gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
+            else if (gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
             {
+                Debug.Log("Your turn.");
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
-            else if(gameSignifier == ServerToClientGameSignifiers.RefreshUI)
+            else if (gameSignifier == ServerToClientGameSignifiers.RefreshUI)
             {
+                Debug.Log("Refreshing UI.");
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
-
+            else if (gameSignifier == ServerToClientGameSignifiers.YouWon)
+            {
+                Debug.Log("You won!");
+                gameSystemManager.GetComponent<GameSystemManager>().GameWon(true);
+            }
+            else if (gameSignifier == ServerToClientGameSignifiers.OpponentWon)
+            {
+                Debug.Log("Opponent won!");
+                gameSystemManager.GetComponent<GameSystemManager>().GameWon(false);
+            }
         }
-
-        
     }
 
     public bool IsConnected()
@@ -198,6 +208,8 @@ public static class ClientToServerAccountSignifiers
 public static class ClientToServerGameSignifiers
 {
     public const int ChoiceMade = 1;
+
+    public const int ResetGame = 2;
 }
 
 public static class ServerToClientStateSignifiers
@@ -222,9 +234,9 @@ public static class ServerToClientGameSignifiers
 {
     public const int CurrentTurn = 1;
 
-    public const int Player1Won = 2;
+    public const int YouWon = 2;
 
-    public const int Player2Won = 3;
+    public const int OpponentWon = 3;
 
     public const int RefreshUI = 4;
 

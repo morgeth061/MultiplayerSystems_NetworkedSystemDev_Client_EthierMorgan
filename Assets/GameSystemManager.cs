@@ -17,6 +17,8 @@ public class GameSystemManager : MonoBehaviour
     GameObject BottomRight;
     GameObject OpponentName;
 
+    GameObject RestartButton;
+
     bool gameRunning = false;
     GameObject networkedClient;
 
@@ -30,6 +32,21 @@ public class GameSystemManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void PlayerJoined()
+    {
+        GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        foreach (GameObject go in sceneObjects)
+        {
+            if (go.name == "Restart")
+            {
+                RestartButton = go;
+            }
+        }
+
+        RestartButton.GetComponent<Button>().onClick.AddListener(RestartButtonClicked);
+        RestartButton.SetActive(false);
     }
 
     public void InitializeGame(string name)
@@ -109,6 +126,21 @@ public class GameSystemManager : MonoBehaviour
         BottomLeft.GetComponent<Button>().GetComponentInChildren<Text>().text = ConvertButtonString(bl);
         BottomMiddle.GetComponent<Button>().GetComponentInChildren<Text>().text = ConvertButtonString(bm);
         BottomRight.GetComponent<Button>().GetComponentInChildren<Text>().text = ConvertButtonString(br);
+
+        RestartButton.SetActive(false);
+    }
+
+    public void GameWon(bool isWon)
+    {
+        if(isWon)
+        {
+            RestartButton.SetActive(true);
+        }
+    }
+
+    private void RestartButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ResetGame);
     }
 
     private string ConvertButtonString(int val)
@@ -139,7 +171,6 @@ public class GameSystemManager : MonoBehaviour
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ChoiceMade + "," + 1);
         }
     }
-
     private void TopMiddleClicked()
     {
         if (TopMiddle.GetComponent<Button>().GetComponentInChildren<Text>().text == "")
