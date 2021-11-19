@@ -18,6 +18,7 @@ public class GameSystemManager : MonoBehaviour
     GameObject OpponentName;
 
     GameObject RestartButton;
+    GameObject ReplayButton;
     GameObject ChatboxTextNew;
     GameObject ChatboxTextOld;
 
@@ -27,6 +28,7 @@ public class GameSystemManager : MonoBehaviour
     GameObject Gotcha;
 
     bool gameRunning = false;
+    bool isSpectator = false;
     GameObject networkedClient;
 
     public void PlayerJoined()
@@ -37,6 +39,10 @@ public class GameSystemManager : MonoBehaviour
             if (go.name == "Restart")
             {
                 RestartButton = go;
+            }
+            else if (go.name == "Replay")
+            {
+                ReplayButton = go;
             }
             else if (go.name == "ChatboxText1")
             {
@@ -66,25 +72,7 @@ public class GameSystemManager : MonoBehaviour
             {
                 networkedClient = go;
             }
-        }
-
-        RestartButton.GetComponent<Button>().onClick.AddListener(RestartButtonClicked);
-        GoodGame.GetComponent<Button>().onClick.AddListener(GoodGameButtonClicked);
-        HurryUp.GetComponent<Button>().onClick.AddListener(HurryUpButtonClicked);
-        NiceMove.GetComponent<Button>().onClick.AddListener(NiceMoveButtonClicked);
-        Gotcha.GetComponent<Button>().onClick.AddListener(GotchaButtonClicked);
-
-        RestartButton.SetActive(false);
-
-        UpdateTextBox("Player 1 Joined");
-    }
-
-    public void InitializeGame(string name)
-    {
-        GameObject[] sceneObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
-        foreach (GameObject go in sceneObjects)
-        {
-            if (go.name == "TopLeft")
+            else if (go.name == "TopLeft")
             {
                 TopLeft = go;
             }
@@ -120,12 +108,39 @@ public class GameSystemManager : MonoBehaviour
             {
                 BottomRight = go;
             }
-            else if(go.name == "OpponentName")
+            else if (go.name == "OpponentName")
             {
                 OpponentName = go;
             }
-            
+
         }
+
+        RestartButton.GetComponent<Button>().onClick.AddListener(RestartButtonClicked);
+        ReplayButton.GetComponent<Button>().onClick.AddListener(ReplayButtonClicked);
+        GoodGame.GetComponent<Button>().onClick.AddListener(GoodGameButtonClicked);
+        HurryUp.GetComponent<Button>().onClick.AddListener(HurryUpButtonClicked);
+        NiceMove.GetComponent<Button>().onClick.AddListener(NiceMoveButtonClicked);
+        Gotcha.GetComponent<Button>().onClick.AddListener(GotchaButtonClicked);
+
+        RestartButton.SetActive(false);
+        ReplayButton.SetActive(false);
+
+        UpdateTextBox("Player 1 Joined");
+    }
+
+    public void SetSpectator()
+    {
+        isSpectator = true;
+
+        GoodGame.SetActive(false);
+        HurryUp.SetActive(false);
+        Gotcha.SetActive(false);
+        NiceMove.SetActive(false);
+        OpponentName.GetComponent<Text>().text = "Spectator";
+    }
+
+    public void InitializeGame(string name)
+    {
 
         gameRunning = true;
 
@@ -163,12 +178,18 @@ public class GameSystemManager : MonoBehaviour
         if(isWon)
         {
             RestartButton.SetActive(true);
+            ReplayButton.SetActive(true);
         }
     }
 
     private void RestartButtonClicked()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ResetGame);
+    }
+
+    private void ReplayButtonClicked()
+    {
+        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Replay);
     }
 
     private void GoodGameButtonClicked()

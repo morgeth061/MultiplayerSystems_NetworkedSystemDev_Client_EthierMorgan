@@ -23,6 +23,7 @@ public class NetworkedClient : MonoBehaviour
 
     //Game
     bool gameInitialized = false;
+    bool isSpectator = false;
     GameObject gameSystemManager;
     string username;
 
@@ -182,6 +183,10 @@ public class NetworkedClient : MonoBehaviour
                 gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox(csv[2]);
             }
         }
+        else if(stateSignifier == ServerToClientStateSignifiers.Spectate)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().SetSpectator();
+        }
     }
 
     public void SetUsername(string name)
@@ -224,6 +229,8 @@ public static class ClientToServerGameSignifiers
     public const int ResetGame = 2;
 
     public const int Message = 3;
+
+    public const int Replay = 4;
 }
 
 public static class ServerToClientStateSignifiers
@@ -231,6 +238,8 @@ public static class ServerToClientStateSignifiers
     public const int Account = 1;
 
     public const int Game = 2;
+
+    public const int Spectate = 3;
 }
 
 public static class ServerToClientAccountSignifiers
