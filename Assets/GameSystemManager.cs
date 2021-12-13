@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameSystemManager : MonoBehaviour
 {
-
+    //Board buttons
     GameObject TopLeft;
     GameObject TopMiddle;
     GameObject TopRight;
@@ -15,18 +15,21 @@ public class GameSystemManager : MonoBehaviour
     GameObject BottomLeft;
     GameObject BottomMiddle;
     GameObject BottomRight;
+
+    //Opponent & Chat
     GameObject OpponentName;
-
-    GameObject RestartButton;
-    GameObject ReplayButton;
-    GameObject ChatboxTextNew;
-    GameObject ChatboxTextOld;
-
     GameObject GoodGame;
     GameObject HurryUp;
     GameObject NiceMove;
     GameObject Gotcha;
+    GameObject ChatboxTextNew;
+    GameObject ChatboxTextOld;
 
+    //Game Functions
+    GameObject RestartButton;
+    GameObject ReplayButton;
+
+    //Game Variables
     bool gameRunning = false;
     bool isSpectator = false;
     GameObject networkedClient;
@@ -112,7 +115,6 @@ public class GameSystemManager : MonoBehaviour
             {
                 OpponentName = go;
             }
-
         }
 
         RestartButton.GetComponent<Button>().onClick.AddListener(RestartButtonClicked);
@@ -128,6 +130,7 @@ public class GameSystemManager : MonoBehaviour
         UpdateTextBox("Player 1 Joined");
     }
 
+    //Client is a spectator, remove chat functionality
     public void SetSpectator()
     {
         isSpectator = true;
@@ -139,6 +142,7 @@ public class GameSystemManager : MonoBehaviour
         OpponentName.GetComponent<Text>().text = "Spectator";
     }
 
+    //Setup board on client-side after player 2 joined
     public void InitializeGame(string name)
     {
 
@@ -182,16 +186,16 @@ public class GameSystemManager : MonoBehaviour
         }
     }
 
+    //Game Functions
     private void RestartButtonClicked()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.ResetGame);
     }
-
     private void ReplayButtonClicked()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Replay);
     }
-
+    //Messages
     private void GoodGameButtonClicked()
     {
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerStateSignifiers.Game + "," + ClientToServerGameSignifiers.Message + "," + networkedClient.GetComponent<NetworkedClient>().GetUsername() + ": Good game!");

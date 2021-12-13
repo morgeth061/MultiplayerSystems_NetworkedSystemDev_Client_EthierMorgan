@@ -145,44 +145,59 @@ public class NetworkedClient : MonoBehaviour
                 gameSystemManager.GetComponent<GameSystemManager>().PlayerJoined();
             }
         }
+        //Game-Related Functions
         else if(stateSignifier == ServerToClientStateSignifiers.Game)
         {
             int gameSignifier = int.Parse(csv[1]);
 
+            //Initialize game
             if (gameSignifier == ServerToClientGameSignifiers.GameInitialize)
             {
                 Debug.Log("Game initializing.");
                 gameSystemManager.GetComponent<GameSystemManager>().InitializeGame(csv[2]);
                 gameInitialized = true;
             }
+            //Currently your turn
             else if (gameSignifier == ServerToClientGameSignifiers.CurrentTurn)
             {
                 Debug.Log("Your turn.");
                 gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("It is now your turn.");
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
+            //Refresh game board with new Xs or Os placed
             else if (gameSignifier == ServerToClientGameSignifiers.RefreshUI)
             {
                 Debug.Log("Refreshing UI.");
                 gameSystemManager.GetComponent<GameSystemManager>().RefreshUI(int.Parse(csv[2]), int.Parse(csv[3]), int.Parse(csv[4]), int.Parse(csv[5]), int.Parse(csv[6]), int.Parse(csv[7]), int.Parse(csv[8]), int.Parse(csv[9]), int.Parse(csv[10]));
             }
+            //You won
             else if (gameSignifier == ServerToClientGameSignifiers.YouWon)
             {
                 Debug.Log("You won!");
                 gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("You won!");
                 gameSystemManager.GetComponent<GameSystemManager>().GameWon(true);
             }
+            //You lost
             else if (gameSignifier == ServerToClientGameSignifiers.OpponentWon)
             {
                 Debug.Log("Opponent won!");
                 gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("You lost.");
                 gameSystemManager.GetComponent<GameSystemManager>().GameWon(false);
             }
+            //Process message received from another player
             else if (gameSignifier == ServerToClientGameSignifiers.Message)
             {
                 gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox(csv[2]);
             }
+            //Game ends in tie
+            else if (gameSignifier == ServerToClientGameSignifiers.Stalemate)
+            {
+                Debug.Log("Tie!");
+                gameSystemManager.GetComponent<GameSystemManager>().UpdateTextBox("Tie!");
+                gameSystemManager.GetComponent<GameSystemManager>().GameWon(true); //Allows both players to click replay/restart button
+            }
         }
+        //You are a spectator
         else if(stateSignifier == ServerToClientStateSignifiers.Spectate)
         {
             gameSystemManager.GetComponent<GameSystemManager>().SetSpectator();
@@ -264,6 +279,8 @@ public static class ServerToClientGameSignifiers
     public const int RefreshUI = 4;
 
     public const int Message = 5;
+
+    public const int Stalemate = 6;
 
     public const int GameInitialize = 9;
 
